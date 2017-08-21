@@ -23,7 +23,6 @@ services:
       - "5000:5000"
     links:
       - postgres
-#is this needed? once attached to frontend why link too?
     external_links:
       - tapp_rails-app:tapp
     command: >
