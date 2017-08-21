@@ -17,12 +17,13 @@ services:
     volumes:
       - .:/srv/app
     networks:
-      - internal
-      - tapp_external
+      - default
+      - tapp_frontend
     ports:
       - "5000:5000"
     links:
       - postgres
+#is this needed? once attached to frontend why link too?
     external_links:
       - tapp_rails-app:tapp
     command: >
@@ -36,22 +37,17 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - /var/lib/postgresql/data
-    networks:
-      - internal
 
   webpack-dev-server:
     build: .
     volumes:
       - .:/srv/app
-    networks:
-      - internal
     ports:
       - "7070:7070"
     command: >
       ./bin/webpack-dev-server-entrypoint --host 0.0.0.0
 
+# cp wants to attach to the frontend network created by the tapp-rails app to call its endpoints
 networks:
-  internal: # aka cp_internal
-    driver: bridge
-  tapp_external:
+  tapp_frontend:
     external: true
