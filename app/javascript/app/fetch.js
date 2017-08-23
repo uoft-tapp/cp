@@ -4,9 +4,20 @@ import { appState } from './appState.js';
 
 /* General helpers */
 
-function defaultFailure(response) {
-    appState.notify('<b>Action Failed:</b> ' + response.statusText);
-    return Promise.reject(response);
+function defaultFailure(resp) {
+    appState.notify('<b>Action Failed:</b> ' + resp.statusText);
+    return Promise.reject(resp);
+}
+
+// extract and display a message which is sent in the (JSON) body of a response
+function showMessageInJsonBody(resp) {
+    if (resp.message != null) {
+        appState.notify(resp.message);
+    } else {
+        resp.json().then(res => {
+            appState.alert(res.message);
+        });
+    }
 }
 
 function fetchHelper(URL, init, success, failure = defaultFailure) {
@@ -126,4 +137,33 @@ function fetchAll() {
         .catch(() => appState.setFetchingOffersList(false));
 }
 
-export { fetchAll };
+// import locked assignments from TAPP
+function importAssignments() {
+    appState.setImporting(true);
+    
+    return postHelper(
+        '/import/locked-assignments',
+        {},
+        () => {
+            appState.setImporting(false, true);
+            fetchAll();
+        },
+        showMessageInJsonBody
+    ).catch(() => appState.setImporting(false));
+}
+
+// send CHASS offers data
+function importOffers(data) {
+    appState.setImporting(true);
+
+    return postHelper(
+        '/import/offers',
+        { chass_offers: data },
+        () => {
+            appState.setImporting(false, true);
+            fetchAll();
+        }
+    ).catch(() => appState.setImporting(false));
+}
+
+export { fetchAll, importOffers, importAssignments };

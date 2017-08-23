@@ -91,6 +91,10 @@ footer div p {
     width: 100%;
 }
 
+#offers-grid #import-buttons {
+    margin-bottom: 1vh;
+}
+    
 /* for Table in admin view */
 #offers-grid .table-container {
     margin-top: 1vh;

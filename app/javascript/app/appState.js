@@ -1,6 +1,8 @@
 import React from 'react';
 import { fromJS } from 'immutable';
 
+import * as fetch from './fetch.js';
+
 const initialState = {
     role: 'admin', // one of { 'admin', 'inst', 'student' }
     user: 'user',
@@ -25,6 +27,8 @@ const initialState = {
 
     /** DB data **/
     offers: { fetching: 0, list: null },
+
+    importing: 0,
 };
 
 class AppState {
@@ -251,6 +255,18 @@ class AppState {
             .keySeq();
     }
 
+    importAssignments() {
+        fetch.importAssignments();
+    }
+    
+    importOffers(data) {
+        fetch.importOffers(data);
+    }
+
+    importing() {
+        return this.get('importing') > 0;
+    }
+
     isOffersListNull() {
         return this.get('offers.list') == null;
     }
@@ -270,6 +286,24 @@ class AppState {
             });
         } else {
             this.set('offers.fetching', init - 1);
+        }
+    }
+
+    setImporting(importing, success) {
+        let init = this.get('importing'),
+            notifications = this.get('nav.notifications');
+        if (importing) {
+            this.set({
+                importing: init + 1,
+                'nav.notifications': notifications.push('<i>Import in progress...</i>'),
+            });
+        } else if (success) {
+            this.set({
+                importing: init - 1,
+                'nav.notifications': notifications.push('Import completed successfully.'),
+            });
+        } else {
+            this.set('importing', init - 1);
         }
     }
 

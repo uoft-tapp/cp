@@ -5,7 +5,7 @@ import { ButtonGroup, Button, DropdownButton, MenuItem, Glyphicon } from 'react-
 class TableMenu extends React.Component {
     render() {
         return (
-            <div className="applicant-table-menu">
+            <div className="table-menu">
                 <ButtonGroup>
                     <Button onClick={this.props.clearFilters}>Clear filters</Button>
 

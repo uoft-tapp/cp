@@ -3,6 +3,7 @@ import { Grid } from 'react-bootstrap';
 
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
+import { ImportForm } from './importForm.js';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -139,6 +140,8 @@ class Admin extends React.Component {
 
         return (
             <Grid fluid id="offers-grid">
+                <ImportForm {...this.props} />
+
                 <TableMenu
                     config={this.config}
                     getSelectedSortFields={() => this.props.appState.getSorts()}
