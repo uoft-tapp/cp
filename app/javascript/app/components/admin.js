@@ -8,6 +8,16 @@ import { OffersMenu } from './offersMenu.js';
 import { CommMenu } from './commMenu.js';
 
 class Admin extends React.Component {
+    getCheckboxElements() {
+        return document.getElementsByClassName('offer-checkbox');
+    }
+
+    getSelectedOffers() {
+        return Array.prototype.filter
+            .call(this.getCheckboxElements(), box => box.checked == true)
+            .map(box => box.id);
+    }
+
     render() {
         let nullCheck = this.props.appState.isOffersListNull();
         if (nullCheck) {
@@ -25,50 +35,52 @@ class Admin extends React.Component {
                         defaultChecked={false}
                         id="header-checkbox"
                         onClick={event =>
-                            Array.prototype.forEach.call(
-                                document.getElementsByClassName('offer-checkbox'),
-                                box => {
-                                    box.checked = event.target.checked;
-                                }
-                            )}
+                            Array.prototype.forEach.call(this.getCheckboxElements(), box => {
+                                box.checked = event.target.checked;
+                            })}
                     />
                 ),
                 data: p =>
-                    <input type="checkbox" defaultChecked={false} className="offer-checkbox" />,
+                    <input
+                        type="checkbox"
+                        defaultChecked={false}
+                        className="offer-checkbox"
+                        id={p.offerId}
+                    />,
 
                 style: { width: 0.02, textAlign: 'center' },
             },
             {
                 header: 'Last Name',
-                data: p => p.get('last_name'),
+                data: p => p.offer.get('last_name'),
                 sortData: p => p.get('last_name'),
 
                 style: { width: 0.08 },
             },
             {
                 header: 'First Name',
-                data: p => p.get('first_name'),
+                data: p => p.offer.get('first_name'),
                 sortData: p => p.get('first_name'),
 
                 style: { width: 0.06 },
             },
             {
                 header: 'Email',
-                data: p => p.get('email'),
+                data: p => p.offer.get('email'),
                 sortData: p => p.get('email'),
 
                 style: { width: 0.13 },
             },
             {
                 header: 'Student Number',
-                data: p => p.get('student_number'),
+                data: p => p.offer.get('student_number'),
                 sortData: p => p.get('student_number'),
 
                 style: { width: 0.06 },
             },
             {
                 header: 'Position',
-                data: p => p.getIn(['contract_details', 'position']),
+                data: p => p.offer.getIn(['contract_details', 'position']),
                 sortData: p => p.getIn(['contract_details', 'position']),
 
                 filterLabel: 'Position',
@@ -82,14 +94,14 @@ class Admin extends React.Component {
             },
             {
                 header: 'Hours',
-                data: p => p.getIn(['contract_details', 'hours']),
+                data: p => p.offer.getIn(['contract_details', 'hours']),
                 sortData: p => p.getIn(['contract_details', 'hours']),
 
                 style: { width: 0.03 },
             },
             {
                 header: 'Status',
-                data: p => p.getIn(['contract_statuses', 'status']),
+                data: p => p.offer.getIn(['contract_statuses', 'status']),
                 sortData: p => p.getIn(['contract_statuses', 'status']),
 
                 filterLabel: 'Status',
@@ -107,8 +119,8 @@ class Admin extends React.Component {
             {
                 header: 'Contract Send Date',
                 data: p =>
-                    p.getIn(['contract_statuses', 'sent_at'])
-                        ? new Date(p.getIn(['contract_statuses', 'sent_at'])).toLocaleString()
+                    p.offer.getIn(['contract_statuses', 'sent_at'])
+                        ? new Date(p.offer.getIn(['contract_statuses', 'sent_at'])).toLocaleString()
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'sent_at']),
 
@@ -117,8 +129,8 @@ class Admin extends React.Component {
             {
                 header: 'Nag Count',
                 data: p =>
-                    p.getIn(['contract_statuses', 'nag_count'])
-                        ? p.getIn(['contract_statuses', 'nag_count'])
+                    p.offer.getIn(['contract_statuses', 'nag_count'])
+                        ? p.offer.getIn(['contract_statuses', 'nag_count'])
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'nag_count']),
 
@@ -127,9 +139,9 @@ class Admin extends React.Component {
             {
                 header: 'HRIS Status',
                 data: p =>
-                    p.getIn(['contract_statuses', 'hr_status']) == undefined
+                    p.offer.getIn(['contract_statuses', 'hr_status']) == undefined
                         ? '-'
-                        : p.getIn(['contract_statuses', 'hr_status']),
+                        : p.offer.getIn(['contract_statuses', 'hr_status']),
                 sortData: p =>
                     p.getIn(['contract_statuses', 'hr_status']) == undefined
                         ? ''
@@ -148,8 +160,10 @@ class Admin extends React.Component {
             {
                 header: 'Printed Date',
                 data: p =>
-                    p.getIn(['contract_statuses', 'printed_at'])
-                        ? new Date(p.getIn(['contract_statuses', 'printed_at'])).toLocaleString()
+                    p.offer.getIn(['contract_statuses', 'printed_at'])
+                        ? new Date(
+                              p.offer.getIn(['contract_statuses', 'printed_at'])
+                          ).toLocaleString()
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'printed_at']),
 
@@ -158,9 +172,9 @@ class Admin extends React.Component {
             {
                 header: 'DDAH Status',
                 data: p =>
-                    p.getIn(['contract_statuses', 'ddah_status']) == undefined
+                    p.offer.getIn(['contract_statuses', 'ddah_status']) == undefined
                         ? '-'
-                        : p.getIn(['contract_statuses', 'ddah_status']),
+                        : p.offer.getIn(['contract_statuses', 'ddah_status']),
                 sortData: p =>
                     p.getIn(['contract_statuses', 'ddah_status']) == undefined
                         ? ''
@@ -185,8 +199,12 @@ class Admin extends React.Component {
                 <ButtonToolbar id="dropdown-menu">
                     <ImportMenu {...this.props} />
                     <OffersMenu {...this.props} />
-                    <CommMenu {...this.props} />
-                    <Button bsStyle="primary">Print contracts</Button>
+                    <CommMenu getSelected={() => this.getSelectedOffers()} {...this.props} />
+                    <Button
+                        bsStyle="primary"
+                        onClick={() => this.props.appState.print(this.getSelectedOffers())}>
+                        Print contracts
+                    </Button>
 
                     <TableMenu
                         config={this.config}

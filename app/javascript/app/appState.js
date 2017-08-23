@@ -238,6 +238,10 @@ class AppState {
      ** data getters and setters **
      ******************************/
 
+    email(emails) {
+        fetch.email(emails);
+    }
+
     // check if offers are being fetched
     fetchingOffers() {
         return this.get('offers.fetching') > 0;
@@ -250,7 +254,7 @@ class AppState {
     // get a sorted list of the positions in the current offers list as a JS array
     getPositions() {
         let offers = this.getOffersList();
-        
+
         if (offers) {
             return offers
                 .map(offer => offer.get('contract_details').get('position'))
@@ -264,7 +268,7 @@ class AppState {
     importAssignments() {
         fetch.importAssignments();
     }
-    
+
     importOffers(data) {
         fetch.importOffers(data);
     }
@@ -275,6 +279,22 @@ class AppState {
 
     isOffersListNull() {
         return this.get('offers.list') == null;
+    }
+
+    nag(offers) {
+        fetch.nag(offers);
+    }
+
+    print(offers) {
+        fetch.print(offers);
+    }
+
+    sendContracts(offers) {
+        fetch.sendContracts(offers);
+    }
+
+    setDdahAccepted(offers) {
+        fetch.setDdahAccepted(offers);
     }
 
     setFetchingOffersList(fetching, success) {
@@ -293,6 +313,10 @@ class AppState {
         } else {
             this.set('offers.fetching', init - 1);
         }
+    }
+
+    setHrProcessed(offers) {
+        fetch.setHrProcessed(offers);
     }
 
     setImporting(importing, success) {

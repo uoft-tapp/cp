@@ -88,7 +88,7 @@ TableMenu.propTypes = {
     config: PropTypes.arrayOf(
         PropTypes.shape({
             // label for table column, used in table header
-            header: PropTypes.string.isRequired,
+            header: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
             // function that produces the data needed for this column, for each row
             data: PropTypes.func.isRequired,
 

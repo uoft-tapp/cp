@@ -140,7 +140,7 @@ function fetchAll() {
 // import locked assignments from TAPP
 function importAssignments() {
     appState.setImporting(true);
-    
+
     return postHelper(
         '/import/locked-assignments',
         {},
@@ -156,14 +156,105 @@ function importAssignments() {
 function importOffers(data) {
     appState.setImporting(true);
 
-    return postHelper(
-        '/import/offers',
-        { chass_offers: data },
-        () => {
-            appState.setImporting(false, true);
-            fetchAll();
-        }
-    ).catch(() => appState.setImporting(false));
+    return postHelper('/import/offers', { chass_offers: data }, () => {
+        appState.setImporting(false, true);
+        fetchAll();
+    }).catch(() => appState.setImporting(false));
 }
 
-export { fetchAll, importOffers, importAssignments };
+// send contracts
+function sendContracts(offers) {
+    return postHelper(
+        '/offers/send-contracts',
+        { offers: offers },
+        fetchAll,
+        showMessageInJsonBody
+    );
+}
+
+// email applicants
+function email(emails) {
+    let ref =
+        emails.length == 1
+            ? 'mailto:' + emails[0] // if there is only a single recipient, send normally
+            : 'mailto:?bcc=' + emails.join(';'); // if there are multiple recipients, bcc all
+
+    var a = document.createElement('a');
+    a.href = ref;
+    a.click();
+}
+
+// nag applicants
+function nag(offers) {
+    return postHelper('/offers/nag', { contracts: offers }, fetchAll, showMessageInJsonBody);
+}
+
+// mark contracts as hr_processed
+function setHrProcessed(offers) {
+    return putHelper(
+        '/offers/batch-update',
+        { offers: offers, hr_status: 'Processed' },
+        fetchAll,
+        showMessageInJsonBody
+    );
+}
+
+// mark contracts as ddah_accepted
+function setDdahAccepted(offers) {
+    return putHelper(
+        '/offers/batch-update',
+        { offers: offers, ddah_status: 'Accepted' },
+        fetchAll,
+        showMessageInJsonBody
+    );
+}
+
+// withdraw offers
+/*function withdraw(id, status){
+    if(status=="Pending"){
+        postHelper("/offers/"+id+"/decision/withdraw", {});
+    }
+    else{
+        alert("Error: you can't change the status of this contract. It's already been "+status.toLowerCase()+".");
+    }
+}*/
+
+// print contracts
+function print(offers) {
+    //BLOB
+    return postHelper(
+        '/offers/print',
+        { contracts: offers, update: true },
+        fetchAll,
+        showMessageInJsonBody
+    );
+}
+
+/*
+      function showContract(id){
+        postHelper("/offers/print", {contracts: [id], update: false}, "", true)
+        }
+
+      function updateSession(input, id){
+        let data = {pay: input.value};
+        let init = {
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+            },
+            method: 'PUT',
+            body: JSON.stringify(data)
+        };
+        fetchHelper("/sessions/"+id, init, "Pay updated");
+        }*/
+
+export {
+    fetchAll,
+    importOffers,
+    importAssignments,
+    sendContracts,
+    email,
+    nag,
+    setHrProcessed,
+    setDdahAccepted,
+    print,
+};

@@ -33,7 +33,7 @@ const OfferRow = props =>
                           })
                         : {}
                 }>
-                {field.data(props.offer)}
+                {field.data({ offer: props.offer, offerId: props.offerId })}
             </td>
         )}
     </tr>;
@@ -43,10 +43,8 @@ class TableInst extends React.Component {
     filterOffers() {
         this.offers = this.props.getOffers();
 
+        // apply selected filters
         let selectedFilters = this.props.getSelectedFilters();
-        let selectedSortFields = this.props.getSelectedSortFields();
-
-        // apply additional filtering to unassigned offers
         for (var field of selectedFilters.keys()) {
             this.offers = this.offers.filter(offer =>
                 // disjointly apply filters within the same field
@@ -60,7 +58,8 @@ class TableInst extends React.Component {
             );
         }
 
-        // apply additional sorting to unassigned offers
+        // apply selected sorts
+        let selectedSortFields = this.props.getSelectedSortFields();
         this.offers = this.offers.sort((a, b) => this.sortOffers(a, b, selectedSortFields));
     }
 
@@ -126,7 +125,7 @@ TableInst.propTypes = {
     config: PropTypes.arrayOf(
         PropTypes.shape({
             // label for table column, used in table header
-            header: PropTypes.string.isRequired,
+            header: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
             // function that produces the data needed for this column, for each row
             data: PropTypes.func.isRequired,
 
