@@ -257,7 +257,7 @@ class AppState {
 
         if (offers) {
             return offers
-                .map(offer => offer.get('contract_details').get('position'))
+                .map(offer => offer.getIn(['contract_details','position']))
                 .flip()
                 .keySeq()
                 .toJS();

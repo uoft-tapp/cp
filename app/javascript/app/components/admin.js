@@ -4,7 +4,6 @@ import { Grid, ButtonToolbar, DropdownButton, MenuItem, Button } from 'react-boo
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
 import { ImportMenu } from './importMenu.js';
-import { OffersMenu } from './offersMenu.js';
 
 class Admin extends React.Component {
     getCheckboxElements() {
@@ -15,6 +14,38 @@ class Admin extends React.Component {
         return Array.prototype.filter
             .call(this.getCheckboxElements(), box => box.checked == true)
             .map(box => box.id);
+    }
+
+    // fetch function wrappers
+
+    email() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.email(
+            this.getSelectedOffers().map(offer => offers.get(offer).get('email'))
+        );
+    }
+
+    nag() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.nag(
+            this.getSelectedOffers().filter(
+                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Pending'
+            )
+        );
+    }
+
+    print() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.print(this.getSelectedOffers());
+    }
+
+    sendContracts() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.sendContracts(
+            this.getSelectedOffers().filter(
+                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Unsent'
+            )
+        );
     }
 
     render() {
@@ -197,34 +228,23 @@ class Admin extends React.Component {
             <Grid fluid id="offers-grid">
                 <ButtonToolbar id="dropdown-menu">
                     <ImportMenu {...this.props} />
-                    <OffersMenu {...this.props} />
 
-                    <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.email(
-                                    this.getSelectedOffers().map(offer =>
-                                        offers.get(offer).get('email')
-                                    )
-                                )}>
-                            Email
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.nag(
-                                    this.getSelectedOffers().filter(
-                                        offer =>
-                                            offers.getIn([offer, 'contract_statuses', 'status']) ==
-                                            'Pending'
-                                    )
-                                )}>
-                            Nag
-                        </MenuItem>
+                    <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
+                        <MenuItem onClick={() => this.sendContracts()}>Send contract(s)</MenuItem>
+
+                        <MenuItem onClick={() => null}>Withdraw offer(s)</MenuItem>
+
+                        <MenuItem onClick={() => null}>Set DDAH processed</MenuItem>
+
+                        <MenuItem onClick={() => null}>Set HR processed</MenuItem>
                     </DropdownButton>
 
-                    <Button
-                        bsStyle="primary"
-                        onClick={() => this.props.appState.print(this.getSelectedOffers())}>
+                    <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
+                        <MenuItem onClick={() => this.email()}>Email</MenuItem>
+                        <MenuItem onClick={() => this.nag()}>Nag</MenuItem>
+                    </DropdownButton>
+
+                    <Button bsStyle="primary" onClick={() => this.print()}>
                         Print contracts
                     </Button>
 
