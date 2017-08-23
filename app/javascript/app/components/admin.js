@@ -47,6 +47,24 @@ class Admin extends React.Component {
             )
         );
     }
+    
+    setDdahAccepted() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.setDdahAccepted(
+            this.getSelectedOffers().filter(
+                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted'
+            )
+        );
+    }
+
+    setHrProcessed() {
+        let offers = this.props.appState.getOffersList();
+        this.props.appState.setHrProcessed(
+            this.getSelectedOffers().filter(
+                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted'
+            )
+        );
+    }
 
     render() {
         let nullCheck = this.props.appState.isOffersListNull();
@@ -231,12 +249,9 @@ class Admin extends React.Component {
 
                     <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
                         <MenuItem onClick={() => this.sendContracts()}>Send contract(s)</MenuItem>
-
                         <MenuItem onClick={() => null}>Withdraw offer(s)</MenuItem>
-
-                        <MenuItem onClick={() => null}>Set DDAH processed</MenuItem>
-
-                        <MenuItem onClick={() => null}>Set HR processed</MenuItem>
+                        <MenuItem onClick={() => this.setHrProcessed()}>Set HR processed</MenuItem>
+                        <MenuItem onClick={() => this.setDdahAccepted()}>Set DDAH accepted</MenuItem>
                     </DropdownButton>
 
                     <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
