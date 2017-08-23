@@ -16,56 +16,6 @@ class Admin extends React.Component {
             .map(box => box.id);
     }
 
-    // fetch function wrappers
-
-    email() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.email(
-            this.getSelectedOffers().map(offer => offers.get(offer).get('email'))
-        );
-    }
-
-    nag() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.nag(
-            this.getSelectedOffers().filter(
-                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Pending'
-            )
-        );
-    }
-
-    print() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.print(this.getSelectedOffers());
-    }
-
-    sendContracts() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.sendContracts(
-            this.getSelectedOffers().filter(
-                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Unsent'
-            )
-        );
-    }
-    
-    setDdahAccepted() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.setDdahAccepted(
-            this.getSelectedOffers().filter(
-                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted'
-            )
-        );
-    }
-
-    setHrProcessed() {
-        let offers = this.props.appState.getOffersList();
-        this.props.appState.setHrProcessed(
-            this.getSelectedOffers().filter(
-                offer => offers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted'
-            )
-        );
-    }
-
     render() {
         let nullCheck = this.props.appState.isOffersListNull();
         if (nullCheck) {
@@ -248,15 +198,36 @@ class Admin extends React.Component {
                     <ImportMenu {...this.props} />
 
                     <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
-                        <MenuItem onClick={() => this.sendContracts()}>Send contract(s)</MenuItem>
-                        <MenuItem onClick={() => null}>Withdraw offer(s)</MenuItem>
-                        <MenuItem onClick={() => this.setHrProcessed()}>Set HR processed</MenuItem>
-                        <MenuItem onClick={() => this.setDdahAccepted()}>Set DDAH accepted</MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.sendContracts(this.getSelectedOffers())}>
+                            Send contract(s)
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.withdrawOffers(this.getSelectedOffers())}>
+                            Withdraw offer(s)
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.setHrProcessed(this.getSelectedOffers())}>
+                            Set HR processed
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.setDdahAccepted(this.getSelectedOffers())}>
+                            Set DDAH accepted
+                        </MenuItem>
                     </DropdownButton>
 
                     <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
-                        <MenuItem onClick={() => this.email()}>Email</MenuItem>
-                        <MenuItem onClick={() => this.nag()}>Nag</MenuItem>
+                        <MenuItem
+                            onClick={() => this.props.appState.email(this.getSelectedOffers())}>
+                            Email
+                        </MenuItem>
+                        <MenuItem onClick={() => this.props.appState.nag(this.getSelectedOffers())}>
+                            Nag
+                        </MenuItem>
                     </DropdownButton>
 
                     <Button bsStyle="primary" onClick={() => this.print()}>
