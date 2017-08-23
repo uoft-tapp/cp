@@ -19,8 +19,22 @@ class Admin extends React.Component {
 
         this.config = [
             {
-                header: '',
-                data: p => <input type="checkbox" defaultChecked={false} />,
+                header: (
+                    <input
+                        type="checkbox"
+                        defaultChecked={false}
+                        id="header-checkbox"
+                        onClick={event =>
+                            Array.prototype.forEach.call(
+                                document.getElementsByClassName('offer-checkbox'),
+                                box => {
+                                    box.checked = event.target.checked;
+                                }
+                            )}
+                    />
+                ),
+                data: p =>
+                    <input type="checkbox" defaultChecked={false} className="offer-checkbox" />,
 
                 style: { width: 0.02, textAlign: 'center' },
             },
@@ -60,9 +74,9 @@ class Admin extends React.Component {
                 filterLabel: 'Position',
                 filterCategories: this.props.appState.getPositions(),
                 // filter out offers not to that position
-                filterFuncs: this.props.appState.getPositions().map(
-                    position => p => p.getIn(['contract_details','position']) == position
-                ),
+                filterFuncs: this.props.appState
+                    .getPositions()
+                    .map(position => p => p.getIn(['contract_details', 'position']) == position),
 
                 style: { width: 0.08 },
             },
@@ -174,19 +188,19 @@ class Admin extends React.Component {
                     <CommMenu {...this.props} />
                     <Button bsStyle="primary">Print contracts</Button>
 
-                <TableMenu
-                    config={this.config}
-                    getSelectedSortFields={() => this.props.appState.getSorts()}
-                    anyFilterSelected={field => this.props.appState.anyFilterSelected(field)}
-                    isFilterSelected={(field, category) =>
-                        this.props.appState.isFilterSelected(field, category)}
-                    toggleFilter={(field, category) =>
-                        this.props.appState.toggleFilter(field, category)}
-                    clearFilters={() => this.props.appState.clearFilters()}
-                    addSort={field => this.props.appState.addSort(field)}
-                    removeSort={field => this.props.appState.removeSort(field)}
-                    toggleSortDir={field => this.props.appState.toggleSortDir(field)}
-                />
+                    <TableMenu
+                        config={this.config}
+                        getSelectedSortFields={() => this.props.appState.getSorts()}
+                        anyFilterSelected={field => this.props.appState.anyFilterSelected(field)}
+                        isFilterSelected={(field, category) =>
+                            this.props.appState.isFilterSelected(field, category)}
+                        toggleFilter={(field, category) =>
+                            this.props.appState.toggleFilter(field, category)}
+                        clearFilters={() => this.props.appState.clearFilters()}
+                        addSort={field => this.props.appState.addSort(field)}
+                        removeSort={field => this.props.appState.removeSort(field)}
+                        toggleSortDir={field => this.props.appState.toggleSortDir(field)}
+                    />
                 </ButtonToolbar>
 
                 <Table
