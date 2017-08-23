@@ -247,12 +247,18 @@ class AppState {
         return this.get('offers.list');
     }
 
-    // get a sorted list of the positions in the current offers list
+    // get a sorted list of the positions in the current offers list as a JS array
     getPositions() {
-        return this.get('offers.list')
-            .map(offer => offer.get('contract_details.position'))
-            .flip()
-            .keySeq();
+        let offers = this.getOffersList();
+        
+        if (offers) {
+            return offers
+                .map(offer => offer.get('contract_details').get('position'))
+                .flip()
+                .keySeq()
+                .toJS();
+        }
+        return [];
     }
 
     importAssignments() {

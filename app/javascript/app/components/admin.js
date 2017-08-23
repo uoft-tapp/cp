@@ -8,8 +8,14 @@ import { OffersMenu } from './offersMenu.js';
 import { CommMenu } from './commMenu.js';
 
 class Admin extends React.Component {
-    constructor(props) {
-        super(props);
+    render() {
+        let nullCheck = this.props.appState.isOffersListNull();
+        if (nullCheck) {
+            return <div id="loader" />;
+        }
+
+        let fetchCheck = this.props.appState.fetchingOffers();
+        let cursorStyle = { cursor: fetchCheck ? 'progress' : 'auto' };
 
         this.config = [
             {
@@ -23,21 +29,21 @@ class Admin extends React.Component {
                 data: p => p.get('last_name'),
                 sortData: p => p.get('last_name'),
 
-                style: { width: 0.1 },
+                style: { width: 0.08 },
             },
             {
                 header: 'First Name',
                 data: p => p.get('first_name'),
                 sortData: p => p.get('first_name'),
 
-                style: { width: 0.08 },
+                style: { width: 0.06 },
             },
             {
                 header: 'Email',
                 data: p => p.get('email'),
                 sortData: p => p.get('email'),
 
-                style: { width: 0.12 },
+                style: { width: 0.13 },
             },
             {
                 header: 'Student Number',
@@ -52,13 +58,13 @@ class Admin extends React.Component {
                 sortData: p => p.getIn(['contract_details', 'position']),
 
                 filterLabel: 'Position',
-                filterCategories: [], //props.appState.getPositions(),
+                filterCategories: this.props.appState.getPositions(),
                 // filter out offers not to that position
-                filterFuncs: [] /*props.appState.getPositions().map(
-                    position => p.getIn(['contract_details','position']) == position
-                ),*/,
+                filterFuncs: this.props.appState.getPositions().map(
+                    position => p => p.getIn(['contract_details','position']) == position
+                ),
 
-                style: { width: 0.1 },
+                style: { width: 0.08 },
             },
             {
                 header: 'Hours',
@@ -82,7 +88,7 @@ class Admin extends React.Component {
                     'Withdrawn',
                 ].map(status => p => p.getIn(['contract_statuses', 'status']) == status),
 
-                style: { width: 0.04 },
+                style: { width: 0.06 },
             },
             {
                 header: 'Contract Send Date',
@@ -123,7 +129,7 @@ class Admin extends React.Component {
                     )
                 ),
 
-                style: { width: 0.04 },
+                style: { width: 0.06 },
             },
             {
                 header: 'Printed Date',
@@ -156,19 +162,9 @@ class Admin extends React.Component {
                     )
                 ),
 
-                style: { width: 0.05 },
+                style: { width: 0.06 },
             },
         ];
-    }
-
-    render() {
-        let nullCheck = this.props.appState.isOffersListNull();
-        if (nullCheck) {
-            return <div id="loader" />;
-        }
-
-        let fetchCheck = this.props.appState.fetchingOffers();
-        let cursorStyle = { cursor: fetchCheck ? 'progress' : 'auto' };
 
         return (
             <Grid fluid id="offers-grid">
@@ -177,7 +173,6 @@ class Admin extends React.Component {
                     <OffersMenu {...this.props} />
                     <CommMenu {...this.props} />
                     <Button bsStyle="primary">Print contracts</Button>
-                </ButtonToolbar>
 
                 <TableMenu
                     config={this.config}
@@ -192,6 +187,7 @@ class Admin extends React.Component {
                     removeSort={field => this.props.appState.removeSort(field)}
                     toggleSortDir={field => this.props.appState.toggleSortDir(field)}
                 />
+                </ButtonToolbar>
 
                 <Table
                     config={this.config}
