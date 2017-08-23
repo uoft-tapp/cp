@@ -1,11 +1,10 @@
 import React from 'react';
-import { Grid, ButtonToolbar, Button } from 'react-bootstrap';
+import { Grid, ButtonToolbar, DropdownButton, MenuItem, Button } from 'react-bootstrap';
 
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
 import { ImportMenu } from './importMenu.js';
 import { OffersMenu } from './offersMenu.js';
-import { CommMenu } from './commMenu.js';
 
 class Admin extends React.Component {
     getCheckboxElements() {
@@ -199,7 +198,30 @@ class Admin extends React.Component {
                 <ButtonToolbar id="dropdown-menu">
                     <ImportMenu {...this.props} />
                     <OffersMenu {...this.props} />
-                    <CommMenu getSelected={() => this.getSelectedOffers()} {...this.props} />
+
+                    <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.email(
+                                    this.getSelectedOffers().map(offer =>
+                                        offers.get(offer).get('email')
+                                    )
+                                )}>
+                            Email
+                        </MenuItem>
+                        <MenuItem
+                            onClick={() =>
+                                this.props.appState.nag(
+                                    this.getSelectedOffers().filter(
+                                        offer =>
+                                            offers.getIn([offer, 'contract_statuses', 'status']) ==
+                                            'Pending'
+                                    )
+                                )}>
+                            Nag
+                        </MenuItem>
+                    </DropdownButton>
+
                     <Button
                         bsStyle="primary"
                         onClick={() => this.props.appState.print(this.getSelectedOffers())}>
