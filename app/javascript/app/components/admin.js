@@ -1,9 +1,11 @@
 import React from 'react';
-import { Grid } from 'react-bootstrap';
+import { Grid, ButtonToolbar, Button } from 'react-bootstrap';
 
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
-import { ImportForm } from './importForm.js';
+import { ImportMenu } from './importMenu.js';
+import { OffersMenu } from './offersMenu.js';
+import { CommMenu } from './commMenu.js';
 
 class Admin extends React.Component {
     constructor(props) {
@@ -28,21 +30,21 @@ class Admin extends React.Component {
                 data: p => p.get('first_name'),
                 sortData: p => p.get('first_name'),
 
-                style: { width: 0.1 },
+                style: { width: 0.08 },
             },
             {
                 header: 'Email',
                 data: p => p.get('email'),
                 sortData: p => p.get('email'),
 
-                style: { width: 0.2 },
+                style: { width: 0.12 },
             },
             {
                 header: 'Student Number',
                 data: p => p.get('student_number'),
                 sortData: p => p.get('student_number'),
 
-                style: { width: 0.08 },
+                style: { width: 0.06 },
             },
             {
                 header: 'Position',
@@ -56,14 +58,14 @@ class Admin extends React.Component {
                     position => p.getIn(['contract_details','position']) == position
                 ),*/,
 
-                style: { width: 0.15 },
+                style: { width: 0.1 },
             },
             {
                 header: 'Hours',
                 data: p => p.getIn(['contract_details', 'hours']),
                 sortData: p => p.getIn(['contract_details', 'hours']),
 
-                style: { width: 0.04 },
+                style: { width: 0.03 },
             },
             {
                 header: 'Status',
@@ -80,7 +82,27 @@ class Admin extends React.Component {
                     'Withdrawn',
                 ].map(status => p => p.getIn(['contract_statuses', 'status']) == status),
 
+                style: { width: 0.04 },
+            },
+            {
+                header: 'Contract Send Date',
+                data: p =>
+                    p.getIn(['contract_statuses', 'sent_at'])
+                        ? new Date(p.getIn(['contract_statuses', 'sent_at'])).toLocaleString()
+                        : '',
+                sortData: p => p.getIn(['contract_statuses', 'sent_at']),
+
                 style: { width: 0.07 },
+            },
+            {
+                header: 'Nag Count',
+                data: p =>
+                    p.getIn(['contract_statuses', 'nag_count'])
+                        ? p.getIn(['contract_statuses', 'nag_count'])
+                        : '',
+                sortData: p => p.getIn(['contract_statuses', 'nag_count']),
+
+                style: { width: 0.04 },
             },
             {
                 header: 'HRIS Status',
@@ -100,6 +122,16 @@ class Admin extends React.Component {
                         p.getIn(['contract_statuses', 'hr_status']) == status
                     )
                 ),
+
+                style: { width: 0.04 },
+            },
+            {
+                header: 'Printed Date',
+                data: p =>
+                    p.getIn(['contract_statuses', 'printed_at'])
+                        ? new Date(p.getIn(['contract_statuses', 'printed_at'])).toLocaleString()
+                        : '',
+                sortData: p => p.getIn(['contract_statuses', 'printed_at']),
 
                 style: { width: 0.07 },
             },
@@ -124,7 +156,7 @@ class Admin extends React.Component {
                     )
                 ),
 
-                style: { width: 0.07 },
+                style: { width: 0.05 },
             },
         ];
     }
@@ -140,7 +172,12 @@ class Admin extends React.Component {
 
         return (
             <Grid fluid id="offers-grid">
-                <ImportForm {...this.props} />
+                <ButtonToolbar id="dropdown-menu">
+                    <ImportMenu {...this.props} />
+                    <OffersMenu {...this.props} />
+                    <CommMenu {...this.props} />
+                    <Button bsStyle="primary">Print contracts</Button>
+                </ButtonToolbar>
 
                 <TableMenu
                     config={this.config}

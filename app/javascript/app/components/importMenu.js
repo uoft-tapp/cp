@@ -1,8 +1,9 @@
 import React from 'react';
-import { Form, FormGroup, ControlLabel, FormControl, ButtonToolbar, Button } from 'react-bootstrap';
+import { DropdownButton, MenuItem } from 'react-bootstrap';
 
-// form for importing data from a file and persisting it to the database
-class ImportForm extends React.Component {
+// menu that allows importing data from a file and persisting it to the database, or importing data from TAPP and
+// persisting it to the database
+class ImportMenu extends React.Component {
     uploadFile() {
         let fileInput = document.getElementById('file-input');
         let files = fileInput.files;
@@ -39,17 +40,21 @@ class ImportForm extends React.Component {
 
     render() {
         return (
-            <ButtonToolbar id="import-buttons">
-                <Button
-                    bsStyle="success"
-                    onClick={() => document.getElementById('file-input').click()}>
-                    {this.props.appState.importing() &&
-                        <i
-                            className="fa fa-spinner fa-spin"
-                            style={{ fontSize: '20px', color: 'blue' }}
-                        />}
+            <DropdownButton
+                id="import-dropdown"
+                bsStyle="primary"
+                title={
+                    <span>
+                        Import&nbsp;{this.props.appState.importing() &&
+                            <i
+                                className="fa fa-spinner fa-spin"
+                                style={{ fontSize: '16px', color: 'white' }}
+                            />}
+                    </span>
+                }>
+                <MenuItem onClick={() => document.getElementById('file-input').click()}>
                     Import offers from file
-                </Button>
+                </MenuItem>
 
                 <input
                     id="file-input"
@@ -59,8 +64,7 @@ class ImportForm extends React.Component {
                     onChange={() => this.uploadFile()}
                 />
 
-                <Button
-                    bsStyle="success"
+                <MenuItem
                     onClick={() => {
                         if (
                             confirm(
@@ -70,16 +74,11 @@ class ImportForm extends React.Component {
                             this.props.appState.importAssignments();
                         }
                     }}>
-                    {this.props.appState.importing() &&
-                        <i
-                            className="fa fa-spinner fa-spin"
-                            style={{ fontSize: '20px', color: 'blue' }}
-                        />}
                     Import locked assignments
-                </Button>
-            </ButtonToolbar>
+                </MenuItem>
+            </DropdownButton>
         );
     }
 }
 
-export { ImportForm };
+export { ImportMenu };

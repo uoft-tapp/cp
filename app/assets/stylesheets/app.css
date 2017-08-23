@@ -2,7 +2,7 @@
 :root {
     --footer-height: 4vh; /* includes margins */
     --navbar-height: 71px; /* includes margins */
-    --table-menu-height: calc(34px + 1vh);
+    --table-menu-height: calc(34px);
     --main-div-height: calc(100vh - var(--navbar-height) - var(--footer-height));
 }
 
@@ -91,25 +91,25 @@ footer div p {
     width: 100%;
 }
 
-#offers-grid #import-buttons {
+#offers-grid #dropdown-menu {
     margin-bottom: 1vh;
 }
-    
+
 /* for Table in admin view */
+#offers-grid table {
+    margin: 0;
+}
+
 #offers-grid .table-container {
-    margin-top: 1vh;
+    margin-top: 0.5vh;
 }
 
 #offers-grid .table-body {
     /* note that this assumes that the header is at most one row high */
     max-height: calc(
-        var(--main-div-height) - var(--table-menu-height) - var(--min-row-height)
+        var(--main-div-height) - var(--table-menu-height)*2 - 1.5vh - var(--min-row-height)
     );
     overflow: auto;
-}
-
-#offers-grid table {
-    margin: 0;
 }
 
 .table-container td,
