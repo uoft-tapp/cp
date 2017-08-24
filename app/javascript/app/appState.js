@@ -100,7 +100,7 @@ class AppState {
             'alerts',
             alerts.unshift(
                 fromJS({
-                    id: alerts.size > 0 ? alerts.last().get('id') + 1 : 0,
+                    id: alerts.size > 0 ? alerts.first().get('id') + 1 : 0,
                     text: text,
                 })
             )
