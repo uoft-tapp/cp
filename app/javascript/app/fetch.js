@@ -216,14 +216,16 @@ function showContract(offer){
 }
 
 // withdraw offers
-/*function withdraw(id, status){
-    if(status=="Pending"){
-        postHelper("/offers/"+id+"/decision/withdraw", {});
+function withdrawOffers(offers) {
+    // create an array of promises for each offer being withdrawn
+    return Promise.all(offers.map(
+	offer => postHelper('/offers/' + offer + '/decision/withdraw',
+			    {},
+			    resp => resp,
+			    showMessageInJsonBody)))
+	.then(fetchAll);
     }
-    else{
-        alert("Error: you can't change the status of this contract. It's already been "+status.toLowerCase()+".");
-    }
-}*/
+}
 
 // print contracts
 function print(offers) {
@@ -258,5 +260,7 @@ export {
     nag,
     setHrProcessed,
     setDdahAccepted,
+    showContract,
+    withdrawOffers,
     print,
 };

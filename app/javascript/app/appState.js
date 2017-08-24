@@ -413,6 +413,43 @@ class AppState {
     showContract(offer) {
 	fetch.showContract(offer);
     }
+
+    withdrawOffers(offers) {
+	let status,
+	    pendingOffers = [],
+            allOffers = this.getOffersList();
+
+        for (var offer of offers) {
+	    status = allOffers.getIn([offer, 'contract_statuses', 'status']);
+	    
+            switch (status) {
+		// can only withdraw pending offers
+                case 'Pending':
+                    pendingOffers.push(offer);
+		    break;
+                case 'Unsent':
+		    this.alert(
+		        '<b>Error:</b> Offer to ' +
+                            allOffers.getIn([offer, 'last_name']) +
+                            ', ' +
+                            allOffers.getIn([offer, 'first_name']) +
+			    ' has not been sent'
+		    );
+                    break;
+                default:
+                    this.alert(
+                        '<b>Error:</b> Offer to ' +
+                            allOffers.getIn([offer, 'last_name']) +
+                            ', ' +
+                            allOffers.getIn([offer, 'first_name']) +
+                            ' has already been ' +
+			    status
+                    );
+            }
+        }
+
+	fetch.withdrawOffers(pendingOffers);
+    }
 }
 
 let appState = new AppState();
