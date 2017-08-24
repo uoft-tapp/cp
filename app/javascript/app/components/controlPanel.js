@@ -17,7 +17,7 @@ const getCheckboxElements = () => document.getElementsByClassName('offer-checkbo
 const getSelectedOffers = () =>
     Array.prototype.filter
         .call(getCheckboxElements(), box => box.checked == true)
-        .map(box => box.id);
+      .map(box => box.id);
 
 class ControlPanel extends React.Component {
     render() {
@@ -39,7 +39,7 @@ class ControlPanel extends React.Component {
                         defaultChecked={false}
                         id="header-checkbox"
                         onClick={event =>
-                            Array.prototype.forEach.call(this.getCheckboxElements(), box => {
+                            Array.prototype.forEach.call(getCheckboxElements(), box => {
                                 box.checked = event.target.checked;
                             })}
                     />
