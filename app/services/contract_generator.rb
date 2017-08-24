@@ -23,10 +23,11 @@ class ContractGenerator
       header_end = set_header(HEADER_X_COORD, HEADER_Y_COORD, @parser.get_data("header"))
       salary_page = set_letter(header_end, @parser.get_data("letter"))
       set_ta_coord_signature(@letter_end, @parser.get_data("signature"))
-      set_applicant_signature(@letter_end, offer)
       if no_office_use_only_box
+        set_applicant_signature(@letter_end, offer, false)
         set_form(@parser.get_data("office_form"))
       else
+        set_applicant_signature(@letter_end, offer, true)
         start_new_page
         set_letter(HEADER_X_COORD, @parser.get_data("general_info"))
       end
@@ -249,14 +250,16 @@ class ContractGenerator
     set_text(get_grids(x, y+0.6, 3, 0.6), get_style(REGULAR_LEFT_ALIGN, signature_data[1]))
   end
 
-  def set_applicant_signature(y, offer)
+  def set_applicant_signature(y, offer, applicant_ver)
     x = HEADER_X_COORD+0.3
     draw_line(get_grids(x, y-0.4, 3, 0.6), 0.4)
     set_text(get_grids(x, y+0.2, 3, 0.6), get_style(SMALL_LEFT_ALIGN, "Applicant Signature".upcase))
     if offer[:signature]
       set_text(get_grids(x, y-0.05, 3, 0.6), get_style(INITIAL, offer[:signature]))
     else
-      set_text(get_grids(x, y-0.2, 3, 0.6), get_style(REGULAR_LEFT_ALIGN, "<i>Not Yet Electronically Signed</i>"))
+      if applicant_ver
+        set_text(get_grids(x, y-0.2, 3, 0.6), get_style(REGULAR_LEFT_ALIGN, "<i>Not Yet Electronically Signed</i>"))
+      end
     end
   end
 
