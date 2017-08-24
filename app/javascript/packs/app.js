@@ -33,45 +33,36 @@ class App extends React.Component {
     }
 
     render() {
-        return <RouterInst appState={appState} />;
+        let role = this.props.appState.getCurrentUserRole();
+
+        return (
+            <div>
+                <Navbar {...this.props} />
+
+                {role == 'admin' && <ControlPanel {...this.props} />}
+                {role == 'hris' && null}
+                {role == 'inst' && null}
+                {role == 'student' && null}
+
+                <div className="container-fluid" id="alert-container">
+                    {this.props.appState
+                        .getAlerts()
+                        .map(alert =>
+                            <div
+                                key={'alert-' + alert.get('id')}
+                                className="alert alert-danger"
+                                onClick={() => this.props.appState.dismissAlert(alert.get('id'))}
+                                onAnimationEnd={() =>
+                                    this.props.appState.dismissAlert(alert.get('id'))}
+                                dangerouslySetInnerHTML={{ __html: alert.get('text') }}
+                            />
+                        )}
+                </div>
+            </div>
+        );
     }
 }
 
-/*** Router ***/
-// temporary logout "view"
-const Bye = props =>
-    <div className="container-fluid" style={{ paddingTop: '70px' }}>
-        <h1>Bye!</h1>
-    </div>;
-
-const RouterInst = props => {
-    let role = props.appState.getCurrentUserRole();
-    
-    return (
-        <div>
-            <Navbar {...props} />
-
-            {role == 'admin' && <ControlPanel navKey={routeConfig.admin.id} {...props} />}
-            {role == 'hris' && null}
-            {role == 'inst' && null}
-            {role == 'student' && null}
-	
-            <div className="container-fluid" id="alert-container">
-                {props.appState
-                    .getAlerts()
-                    .map(alert =>
-                        <div
-                            key={'alert-' + alert.get('id')}
-                            className="alert alert-danger"
-                            onClick={() => props.appState.dismissAlert(alert.get('id'))}
-                            onAnimationEnd={() => props.appState.dismissAlert(alert.get('id'))}
-                            dangerouslySetInnerHTML={{ __html: alert.get('text') }}
-                        />
-                    )}
-            </div>
-        </div>
-    );
-
 document.addEventListener('DOMContentLoaded', () => {
-    ReactDOM.render(<App />, document.getElementById('root'));
+    ReactDOM.render(<App appState={appState} />, document.getElementById('root'));
 });

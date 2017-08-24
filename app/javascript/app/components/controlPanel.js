@@ -25,7 +25,7 @@ class ControlPanel extends React.Component {
         let fetchCheck = this.props.appState.fetchingOffers();
         let cursorStyle = { cursor: fetchCheck ? 'progress' : 'auto' };
 
-	const role = this.props.appState.getCurrentUserRole();
+        const role = this.props.appState.getCurrentUserRole();
 
         this.config = [
             {
@@ -122,13 +122,14 @@ class ControlPanel extends React.Component {
                 data: p =>
                     p.offer.getIn(['contract_statuses', 'sent_at'])
                         ? <span>
-		              new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
-                                  .toLocaleString()&ensp;
+                              new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
+                              .toLocaleString()&ensp;
                               <i
-		                  className="fa fa-search-plus"
+                                  className="fa fa-search-plus"
                                   style={{ fontSize: '14px', cursor: 'pointer' }}
                                   onClick={() => this.props.appState.showContract(p.offerId)}
-		              />
+                              />
+                          </span>
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'sent_at']),
 
@@ -205,44 +206,50 @@ class ControlPanel extends React.Component {
         return (
             <Grid fluid id="offers-grid">
                 <ButtonToolbar id="dropdown-menu">
-                    {role == 'admin' && <ImportMenu {...this.props} />
+                    {role == 'admin' && <ImportMenu {...this.props} />}
 
-                    <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.sendContracts(this.getSelectedOffers())}>
-                            Send contract(s)
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.withdrawOffers(this.getSelectedOffers())}>
-                            Withdraw offer(s)
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.setHrProcessed(this.getSelectedOffers())}>
-                            Set HR processed
-                        </MenuItem>
-                        <MenuItem
-                            onClick={() =>
-                                this.props.appState.setDdahAccepted(this.getSelectedOffers())}>
-                            Set DDAH accepted
-                        </MenuItem>
-                    </DropdownButton>
+                    {role == 'admin' &&
+                        <DropdownButton
+                            bsStyle="primary"
+                            title="Update offers"
+                            id="offers-dropdown">
+                            <MenuItem
+                                onClick={() =>
+                                    this.props.appState.sendContracts(this.getSelectedOffers())}>
+                                Send contract(s)
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                    this.props.appState.withdrawOffers(this.getSelectedOffers())}>
+                                Withdraw offer(s)
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                    this.props.appState.setHrProcessed(this.getSelectedOffers())}>
+                                Set HR processed
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() =>
+                                    this.props.appState.setDdahAccepted(this.getSelectedOffers())}>
+                                Set DDAH accepted
+                            </MenuItem>
+                        </DropdownButton>}
 
-                    <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
-                        <MenuItem
-                            onClick={() => this.props.appState.email(this.getSelectedOffers())}>
-                            Email
-                        </MenuItem>
-                        <MenuItem onClick={() => this.props.appState.nag(this.getSelectedOffers())}>
-                            Nag
-                        </MenuItem>
-                    </DropdownButton>}
+                    {role == 'admin' &&
+                        <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
+                            <MenuItem
+                                onClick={() => this.props.appState.email(this.getSelectedOffers())}>
+                                Email
+                            </MenuItem>
+                            <MenuItem
+                                onClick={() => this.props.appState.nag(this.getSelectedOffers())}>
+                                Nag
+                            </MenuItem>
+                        </DropdownButton>}
 
                     <Button
-	                bsStyle="primary"
-	                onClick={() => this.props.appState.print(this.getSelectedOffers())}>
+                        bsStyle="primary"
+                        onClick={() => this.props.appState.print(this.getSelectedOffers())}>
                         Print contracts
                     </Button>
 
