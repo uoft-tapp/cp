@@ -211,7 +211,7 @@ class ControlPanel extends React.Component {
             <Grid fluid id="offers-grid">
                 <ButtonToolbar id="dropdown-menu">
                     {role == 'admin' && <ImportMenu {...this.props} />}
-                    {role == 'admin' && <AdminMenu {...this.props} />}
+                    {role == 'admin' && <OffersMenu {...this.props} />}
                     {role == 'admin' && <CommMenu {...this.props} />}
 
                     <Button
