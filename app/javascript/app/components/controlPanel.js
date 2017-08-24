@@ -34,7 +34,6 @@ class ControlPanel extends React.Component {
                         type="checkbox"
                         defaultChecked={false}
                         id="header-checkbox"
-                        disabled={role != 'admin'}
                         onClick={event =>
                             Array.prototype.forEach.call(this.getCheckboxElements(), box => {
                                 box.checked = event.target.checked;

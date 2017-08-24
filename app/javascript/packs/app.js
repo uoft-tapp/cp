@@ -40,7 +40,7 @@ class App extends React.Component {
                 <Navbar {...this.props} />
 
                 {role == 'admin' && <ControlPanel {...this.props} />}
-                {role == 'hris' && null}
+                {role == 'hris' && <ControlPanel {...this.props} />}
                 {role == 'inst' && null}
                 {role == 'student' && null}
 
