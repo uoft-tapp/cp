@@ -45,14 +45,14 @@ class ControlPanel extends React.Component {
                         id={p.offerId}
                     />,
 
-                style: { width: 0.02, textAlign: 'center' },
+                style: { width: 0.01, textAlign: 'center' },
             },
             {
                 header: 'Last Name',
                 data: p => p.offer.get('last_name'),
                 sortData: p => p.get('last_name'),
 
-                style: { width: 0.08 },
+                style: { width: 0.09 },
             },
             {
                 header: 'First Name',
@@ -122,15 +122,23 @@ class ControlPanel extends React.Component {
                                   p.offer.getIn(['contract_statuses', 'sent_at'])
                               ).toLocaleString()}&ensp;
                               <i
+                                  className="fa fa-search"
+                                  style={{ fontSize: '16px', cursor: 'pointer' }}
+                                  title="Applicant View"
+                                  onClick={() =>
+                                      this.props.appState.showContractApplicant(p.offerId)}
+                              />&nbsp;
+                              <i
                                   className="fa fa-search-plus"
-                                  style={{ fontSize: '14px', cursor: 'pointer' }}
-                                  onClick={() => this.props.appState.showContract(p.offerId)}
+                                  style={{ fontSize: '16px', cursor: 'pointer' }}
+                                  title="Office View"
+                                  onClick={() => this.props.appState.showContractHr(p.offerId)}
                               />
                           </span>
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'sent_at']),
 
-                style: { width: 0.07 },
+                style: { width: 0.08 },
             },
             {
                 header: 'Nag Count',

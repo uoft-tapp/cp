@@ -410,13 +410,12 @@ class AppState {
         this.set('offers.list', list);
     }
 
-    showContract(offer) {
-        if (this.getCurrentUserRole() == 'admin') {
-            // admin see the contract as the applicant would see it
-            fetch.showContractApplicant(offer);
-        } else {
-            fetch.showContractHr(offer);
-        }
+    showContractApplicant(offer) {
+        fetch.showContractApplicant(offer);
+    }
+
+    showContractHr(offer) {
+        fetch.showContractHr(offer);
     }
 
     withdrawOffers(offers) {
