@@ -1,21 +1,25 @@
 import React from 'react';
-import { Grid, ButtonToolbar, DropdownButton, MenuItem, Button } from 'react-bootstrap';
+import {
+    Grid,
+    ButtonToolbar,
+    DropdownButton,
+    MenuItem,
+    Button,
+    FormControl,
+} from 'react-bootstrap';
 
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
 import { ImportMenu } from './importMenu.js';
 
+const getCheckboxElements = () => document.getElementsByClassName('offer-checkbox');
+
+const getSelectedOffers = () =>
+    Array.prototype.filter
+        .call(getCheckboxElements(), box => box.checked == true)
+        .map(box => box.id);
+
 class ControlPanel extends React.Component {
-    getCheckboxElements() {
-        return document.getElementsByClassName('offer-checkbox');
-    }
-
-    getSelectedOffers() {
-        return Array.prototype.filter
-            .call(this.getCheckboxElements(), box => box.checked == true)
-            .map(box => box.id);
-    }
-
     render() {
         let nullCheck = this.props.appState.isOffersListNull();
         if (nullCheck) {
@@ -121,8 +125,9 @@ class ControlPanel extends React.Component {
                 data: p =>
                     p.offer.getIn(['contract_statuses', 'sent_at'])
                         ? <span>
-                              {new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
-                               .toLocaleString()}&ensp;
+                              {new Date(
+                                  p.offer.getIn(['contract_statuses', 'sent_at'])
+                              ).toLocaleString()}&ensp;
                               <i
                                   className="fa fa-search-plus"
                                   style={{ fontSize: '14px', cursor: 'pointer' }}
@@ -206,49 +211,12 @@ class ControlPanel extends React.Component {
             <Grid fluid id="offers-grid">
                 <ButtonToolbar id="dropdown-menu">
                     {role == 'admin' && <ImportMenu {...this.props} />}
-
-                    {role == 'admin' &&
-                        <DropdownButton
-                            bsStyle="primary"
-                            title="Update offers"
-                            id="offers-dropdown">
-                            <MenuItem
-                                onClick={() =>
-                                    this.props.appState.sendContracts(this.getSelectedOffers())}>
-                                Send contract(s)
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() =>
-                                    this.props.appState.withdrawOffers(this.getSelectedOffers())}>
-                                Withdraw offer(s)
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() =>
-                                    this.props.appState.setHrProcessed(this.getSelectedOffers())}>
-                                Set HR processed
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() =>
-                                    this.props.appState.setDdahAccepted(this.getSelectedOffers())}>
-                                Set DDAH accepted
-                            </MenuItem>
-                        </DropdownButton>}
-
-                    {role == 'admin' &&
-                        <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
-                            <MenuItem
-                                onClick={() => this.props.appState.email(this.getSelectedOffers())}>
-                                Email
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => this.props.appState.nag(this.getSelectedOffers())}>
-                                Nag
-                            </MenuItem>
-                        </DropdownButton>}
+                    {role == 'admin' && <AdminMenu {...this.props} />}
+                    {role == 'admin' && <CommMenu {...this.props} />}
 
                     <Button
                         bsStyle="primary"
-                        onClick={() => this.props.appState.print(this.getSelectedOffers())}>
+                        onClick={() => this.props.appState.print(getSelectedOffers())}>
                         Print contracts
                     </Button>
 
@@ -277,5 +245,27 @@ class ControlPanel extends React.Component {
         );
     }
 }
+
+const OffersMenu = props =>
+    <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
+        <MenuItem onClick={() => props.appState.sendContracts(getSelectedOffers())}>
+            Send contract(s)
+        </MenuItem>
+        <MenuItem onClick={() => props.appState.withdrawOffers(getSelectedOffers())}>
+            Withdraw offer(s)
+        </MenuItem>
+        <MenuItem onClick={() => props.appState.setHrProcessed(getSelectedOffers())}>
+            Set HR processed
+        </MenuItem>
+        <MenuItem onClick={() => props.appState.setDdahAccepted(getSelectedOffers())}>
+            Set DDAH accepted
+        </MenuItem>
+    </DropdownButton>;
+
+const CommMenu = props =>
+    <DropdownButton bsStyle="primary" title="Communicate" id="comm-dropdown">
+        <MenuItem onClick={() => props.appState.email(getSelectedOffers())}>Email</MenuItem>
+        <MenuItem onClick={() => props.appState.nag(getSelectedOffers())}>Nag</MenuItem>
+    </DropdownButton>;
 
 export { ControlPanel };
