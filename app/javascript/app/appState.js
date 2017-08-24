@@ -354,12 +354,12 @@ class AppState {
         if (fetching) {
             this.set({
                 'offers.fetching': init + 1,
-                'notifications': notifications.push('<i>Fetching offers...</i>'),
+                notifications: notifications.push('<i>Fetching offers...</i>'),
             });
         } else if (success) {
             this.set({
                 'offers.fetching': init - 1,
-                'notifications': notifications.push('Successfully fetched offers.'),
+                notifications: notifications.push('Successfully fetched offers.'),
             });
         } else {
             this.set('offers.fetching', init - 1);
@@ -394,12 +394,12 @@ class AppState {
         if (importing) {
             this.set({
                 importing: init + 1,
-                'notifications': notifications.push('<i>Import in progress...</i>'),
+                notifications: notifications.push('<i>Import in progress...</i>'),
             });
         } else if (success) {
             this.set({
                 importing: init - 1,
-                'notifications': notifications.push('Import completed successfully.'),
+                notifications: notifications.push('Import completed successfully.'),
             });
         } else {
             this.set('importing', init - 1);
@@ -413,47 +413,33 @@ class AppState {
     showContract(offer) {
         if (this.getCurrentUserRole() == 'admin') {
             // admin see the contract as the applicant would see it
-	    fetch.showContractApplicant(offer);
+            fetch.showContractApplicant(offer);
         } else {
             fetch.showContractHr(offer);
         }
     }
 
     withdrawOffers(offers) {
-	let status,
-	    pendingOffers = [],
+        let status,
+            pendingOffers = [],
             allOffers = this.getOffersList();
 
         for (var offer of offers) {
-	    status = allOffers.getIn([offer, 'contract_statuses', 'status']);
-	    
-            switch (status) {
-		// can only withdraw pending offers
-                case 'Pending':
-                    pendingOffers.push(parseInt(offer));
-		    break;
-                case 'Unsent':
-		    this.alert(
-		        '<b>Error:</b> Offer to ' +
-                            allOffers.getIn([offer, 'last_name']) +
-                            ', ' +
-                            allOffers.getIn([offer, 'first_name']) +
-			    ' has not been sent'
-		    );
-                    break;
-                default:
-                    this.alert(
-                        '<b>Error:</b> Offer to ' +
-                            allOffers.getIn([offer, 'last_name']) +
-                            ', ' +
-                            allOffers.getIn([offer, 'first_name']) +
-                            ' has already been ' +
-			    status
-                    );
+            // cannot withdraw unsent offers
+            if (allOffers.getIn([offer, 'contract_statuses', 'status']) == 'Unsent') {
+                this.alert(
+                    '<b>Error:</b> Offer to ' +
+                        allOffers.getIn([offer, 'last_name']) +
+                        ', ' +
+                        allOffers.getIn([offer, 'first_name']) +
+                        ' has not been sent'
+                );
+            } else {
+                pendingOffers.push(parseInt(offer));
             }
         }
 
-	fetch.withdrawOffers(pendingOffers);
+        fetch.withdrawOffers(pendingOffers);
     }
 }
 
