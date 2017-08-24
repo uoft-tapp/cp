@@ -144,7 +144,7 @@ class ContractGenerator
     i = -1
     max = 1
     form_data.each_with_index do |value, index|
-      if index!=0 && index!=form_data.size-1
+      if index!=0
         type_data = @parser.get_type(value)
         if type_data[:type] == "tablerow"
           (table_data[i][:table]).push(type_data[:data])
@@ -263,7 +263,7 @@ class ContractGenerator
   def set_form(form_data)
     start_new_page
     set_text(get_grids(0.5, HEADER_Y_COORD, 7.5, 0.2), get_style(REGULAR_LEFT_ALIGN, form_data[0]))
-    set_form_table(get_grids(0.5, HEADER_Y_COORD+0.15, 7.5, 10), get_table_data(form_data), form_data.size-1)
+    set_form_table(get_grids(0.5, HEADER_Y_COORD+0.15, 7.5, 10), get_table_data(form_data), form_data.size)
     return page_count
   end
 
