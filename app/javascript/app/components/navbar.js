@@ -1,10 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Link } from 'react-router-dom';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
-
-import { routeConfig } from '../routeConfig.js';
 
 /*** Navbar components ***/
 
@@ -35,10 +32,9 @@ const Notifications = props => {
 
 const Auth = props =>
     <NavDropdown
-        eventKey={routeConfig.logout.id}
         title={props.appState.getCurrentUserRole() + ':' + props.appState.getCurrentUserName()}
         id="nav-auth-dropdown">
-        <MenuItem eventKey={routeConfig.logout.id + '.1'} href={routeConfig.logout.route}>
+        <MenuItem eventKey="logout">
             Logout
         </MenuItem>
     </NavDropdown>;
