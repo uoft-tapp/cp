@@ -205,14 +205,7 @@ function setDdahAccepted(offers) {
 
 // show the contract for this offer in a new window, as an applicant would see it
 function showContractApplicant(offer){
-    return postHelper('/offers/print',
-		      { contracts: [offer], update: false },
-		      resp => resp.blob())
-	.then(blob => {
-	    let fileURL = URL.createObjectURL(blob);
-	    let contractWindow = window.open(fileURL);
-	    contractWindow.onclose = () => URL.revokeObjectURL(fileURL);
-	});
+    window.open('/offers/' + offer + '/pdf');
 }
 
 // show the contract for this offer in a new window, as HR would see it
