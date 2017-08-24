@@ -115,7 +115,7 @@ class ContractGenerator
       end
       if fill
         stroke_bounds
-        text "#{Prawn::Text::NBSP * 3}#{data[:text]}", inline_format: true, align: data[:align]
+        text "#{Prawn::Text::NBSP * 1}#{data[:text]}", inline_format: true, align: data[:align]
         if data[:text]==""
           stroke do
             fill_color 'DDDDDD'
@@ -263,7 +263,7 @@ class ContractGenerator
   def set_form(form_data)
     start_new_page
     set_text(get_grids(0.5, HEADER_Y_COORD, 7.5, 0.2), get_style(REGULAR_LEFT_ALIGN, form_data[0]))
-    set_form_table(get_grids(0.5, HEADER_Y_COORD+0.15, 7.5, 9), get_table_data(form_data), form_data.size-2)
+    set_form_table(get_grids(0.5, HEADER_Y_COORD+0.15, 7.5, 10), get_table_data(form_data), form_data.size-1)
     return page_count
   end
 
@@ -284,7 +284,7 @@ class ContractGenerator
         column = column.strip
         curr_row = row_num+table[:index][1]
         horizontal_1 =  index*row_multiplier
-        if index == row.length-1 && row_multiplier ==1
+        if row_multiplier ==1
           horizontal_2 =  horizontal_1
         else
           horizontal_2 =  (index+1)*row_multiplier-1
