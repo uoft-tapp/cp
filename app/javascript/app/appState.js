@@ -271,7 +271,7 @@ class AppState {
 
         for (var offer of offers) {
             if (allOffers.getIn([offer, 'contract_statuses', 'status']) == 'Pending') {
-                pendingOffers.push(offer);
+                pendingOffers.push(parseInt(offer));
             } else {
                 // offers that are not 'pending' cannot be nagged about
                 this.alert(
@@ -302,7 +302,7 @@ class AppState {
             switch (status) {
                 // can only send contracts that are unsent
                 case 'Unsent':
-                    unsentOffers.push(offer);
+                    unsentOffers.push(parseInt(offer));
                     break;
                 case 'Withdrawn':
                     this.alert(
@@ -333,7 +333,7 @@ class AppState {
         for (var offer of offers) {
             // can only accept DDAH form for accepted offers
             if (allOffers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted') {
-                acceptedOffers.push(offer);
+                acceptedOffers.push(parseInt(offer));
             } else {
                 this.alert(
                     '<b>Error:</b> Cannot accept DDAH form for ' +
@@ -373,7 +373,7 @@ class AppState {
         for (var offer of offers) {
             // can only process contract for accepted offers
             if (allOffers.getIn([offer, 'contract_statuses', 'status']) == 'Accepted') {
-                acceptedOffers.push(offer);
+                acceptedOffers.push(parseInt(offer));
             } else {
                 this.alert(
                     '<b>Error:</b> Cannot process contract for ' +
@@ -430,7 +430,7 @@ class AppState {
             switch (status) {
 		// can only withdraw pending offers
                 case 'Pending':
-                    pendingOffers.push(offer);
+                    pendingOffers.push(parseInt(offer));
 		    break;
                 case 'Unsent':
 		    this.alert(
