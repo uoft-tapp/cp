@@ -4,26 +4,18 @@ import { fromJS } from 'immutable';
 import * as fetch from './fetch.js';
 
 const initialState = {
-    role: 'admin', // one of { 'admin', 'inst', 'student' }
+    role: 'admin', // one of { 'admin', 'hradmin', 'inst', 'student' }
     user: 'user',
 
-    // navbar component
-    nav: {
-        selectedTab: null,
-
-        // list of unread notifications (string can contain HTML, but be careful because it is not sanitized!)
-        notifications: [],
-    },
+    // list of unread notifications (string can contain HTML, but be careful because it is not sanitized!)
+    notifications: [],
 
     // list of UI alerts (string can contain HTML, but be careful because it is not sanitized!)
     alerts: [],
 
-    // admin view
-    adminView: {
-        // will be populated with selected sort and filter fields
-        selectedSortFields: [],
-        selectedFilters: {},
-    },
+    // will be populated with selected sort and filter fields
+    selectedSortFields: [],
+    selectedFilters: {},
 
     /** DB data **/
     offers: { fetching: 0, list: null },
@@ -91,10 +83,10 @@ class AppState {
     // apply a sort to the offers table
     // note that we do not allow multiple sorts on the same field (incl. in different directions)
     addSort(field) {
-        let sorts = this.get('adminView.selectedSortFields');
+        let sorts = this.get('selectedSortFields');
 
         if (!sorts.some(val => val.get(0) == field)) {
-            this.set('adminView.selectedSortFields', sorts.push(fromJS([field, 1])));
+            this.set('selectedSortFields', sorts.push(fromJS([field, 1])));
         } else {
             this.alert('<b>Applicant Table</b>&ensp;Cannot apply the same sort more than once.');
         }
@@ -117,12 +109,12 @@ class AppState {
 
     // check whether any of the given filters in the category are selected on the offers table
     anyFilterSelected(field) {
-        return this.get('adminView.selectedFilters').has(field);
+        return this.get('selectedFilters').has(field);
     }
 
     // remove all selected filters on the offers table
     clearFilters() {
-        this.set('adminView.selectedFilters', fromJS({}));
+        this.set('selectedFilters', fromJS({}));
     }
 
     dismissAlert(id) {
@@ -147,50 +139,41 @@ class AppState {
     }
 
     getFilters() {
-        return this.get('adminView.selectedFilters');
-    }
-
-    getSelectedNavTab() {
-        return this.get('nav.selectedTab');
+        return this.get('selectedFilters');
     }
 
     getSorts() {
-        return this.get('adminView.selectedSortFields');
+        return this.get('selectedSortFields');
     }
 
     getUnreadNotifications() {
-        return this.get('nav.notifications');
+        return this.get('notifications');
     }
 
     // check whether a filter is selected on the offers table
     isFilterSelected(field, category) {
-        let filters = this.get('adminView.selectedFilters');
+        let filters = this.get('selectedFilters');
 
         return filters.has(field) && filters.get(field).includes(category);
     }
 
     // add a notification to the list of unread notifications
     notify(text) {
-        let notifications = this.get('nav.notifications');
-        this.set('nav.notifications', notifications.push(text));
+        let notifications = this.get('notifications');
+        this.set('notifications', notifications.push(text));
     }
 
     // clear the list of unread notifications
     readNotifications() {
-        this.set('nav.notifications', fromJS([]));
+        this.set('notifications', fromJS([]));
     }
 
     // remove a sort from the offers table
     removeSort(field) {
-        let sorts = this.get('adminView.selectedSortFields');
+        let sorts = this.get('selectedSortFields');
         let i = sorts.findIndex(f => f.get(0) == field);
 
-        this.set('adminView.selectedSortFields', sorts.delete(i));
-    }
-
-    // select a navbar tab
-    selectNavTab(eventKey) {
-        this.set('nav.selectedTab', eventKey);
+        this.set('selectedSortFields', sorts.delete(i));
     }
 
     setCurrentUserName(user) {
@@ -203,7 +186,7 @@ class AppState {
 
     // toggle a filter on the offers table
     toggleFilter(field, category) {
-        let filters = this.get('adminView.selectedFilters');
+        let filters = this.get('selectedFilters');
 
         if (filters.has(field)) {
             let filter = filters.get(field);
@@ -211,26 +194,26 @@ class AppState {
 
             if (i == -1) {
                 // filter on this category is not already applied
-                this.set('adminView.selectedFilters[' + field + ']', filter.push(category));
+                this.set('selectedFilters[' + field + ']', filter.push(category));
             } else if (filter.size > 1) {
                 // filter on this category is already applied, along with other categories
-                this.set('adminView.selectedFilters[' + field + ']', filter.delete(i));
+                this.set('selectedFilters[' + field + ']', filter.delete(i));
             } else {
                 // filter is only applied on this category
-                this.set('adminView.selectedFilters', filters.remove(field));
+                this.set('selectedFilters', filters.remove(field));
             }
         } else {
-            this.set('adminView.selectedFilters[' + field + ']', fromJS([category]));
+            this.set('selectedFilters[' + field + ']', fromJS([category]));
         }
     }
 
     // toggle the sort direction of the sort currently applied to the offers table
     toggleSortDir(field) {
-        let sortFields = this.get('adminView.selectedSortFields');
+        let sortFields = this.get('selectedSortFields');
         let i = sortFields.findIndex(f => f.get(0) == field);
 
         if (i != -1) {
-            this.set('adminView.selectedSortFields[' + i + '][1]', -sortFields.get(i).get(1));
+            this.set('selectedSortFields[' + i + '][1]', -sortFields.get(i).get(1));
         }
     }
 
@@ -367,16 +350,16 @@ class AppState {
 
     setFetchingOffersList(fetching, success) {
         let init = this.get('offers.fetching'),
-            notifications = this.get('nav.notifications');
+            notifications = this.get('notifications');
         if (fetching) {
             this.set({
                 'offers.fetching': init + 1,
-                'nav.notifications': notifications.push('<i>Fetching offers...</i>'),
+                'notifications': notifications.push('<i>Fetching offers...</i>'),
             });
         } else if (success) {
             this.set({
                 'offers.fetching': init - 1,
-                'nav.notifications': notifications.push('Successfully fetched offers.'),
+                'notifications': notifications.push('Successfully fetched offers.'),
             });
         } else {
             this.set('offers.fetching', init - 1);
@@ -407,16 +390,16 @@ class AppState {
 
     setImporting(importing, success) {
         let init = this.get('importing'),
-            notifications = this.get('nav.notifications');
+            notifications = this.get('notifications');
         if (importing) {
             this.set({
                 importing: init + 1,
-                'nav.notifications': notifications.push('<i>Import in progress...</i>'),
+                'notifications': notifications.push('<i>Import in progress...</i>'),
             });
         } else if (success) {
             this.set({
                 importing: init - 1,
-                'nav.notifications': notifications.push('Import completed successfully.'),
+                'notifications': notifications.push('Import completed successfully.'),
             });
         } else {
             this.set('importing', init - 1);

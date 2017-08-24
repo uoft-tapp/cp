@@ -258,20 +258,6 @@ class Admin extends React.Component {
             </Grid>
         );
     }
-
-    selectThisTab() {
-        if (this.props.appState.getSelectedNavTab() != this.props.navKey) {
-            this.props.appState.selectNavTab(this.props.navKey);
-        }
-    }
-
-    componentWillMount() {
-        this.selectThisTab();
-    }
-
-    componentWillUpdate() {
-        this.selectThisTab();
-    }
 }
 
 export { Admin };

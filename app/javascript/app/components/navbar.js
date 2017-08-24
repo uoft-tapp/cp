@@ -8,25 +8,6 @@ import { routeConfig } from '../routeConfig.js';
 
 /*** Navbar components ***/
 
-const ViewTab = props =>
-    <li role="presentation" className={props.activeKey == props.id ? 'active' : ''}>
-        <Link to={props.route} className="navbar-link">
-            {props.label}
-        </Link>
-    </li>;
-
-const ViewTabs = props => {
-    let activeKey = props.appState.getSelectedNavTab();
-
-    return (
-        <ul className="nav navbar-nav navbar-left">
-            <ViewTab activeKey={activeKey} {...routeConfig.admin} />
-            <ViewTab activeKey={activeKey} {...routeConfig.cp} />
-            <ViewTab activeKey={activeKey} {...routeConfig.ddah} />
-        </ul>
-    );
-};
-
 const Notifications = props => {
     let notifications = props.appState.getUnreadNotifications();
 
@@ -69,8 +50,6 @@ const NavbarInst = props =>
         <Navbar.Header>
             <Navbar.Brand>TAPP:CP</Navbar.Brand>
         </Navbar.Header>
-
-        <ViewTabs {...props} />
 
         <Nav pullRight>
             <Notifications {...props} />
