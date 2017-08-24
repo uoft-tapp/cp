@@ -218,24 +218,29 @@ function showContract(offer){
 // withdraw offers
 function withdrawOffers(offers) {
     // create an array of promises for each offer being withdrawn
-    return Promise.all(offers.map(
-	offer => postHelper('/offers/' + offer + '/decision/withdraw',
-			    {},
-			    resp => resp,
-			    showMessageInJsonBody)))
+    return Promise.all(offers.map(offer => postHelper(
+	'/offers/' + offer + '/decision/withdraw',
+	{},
+	resp => resp,
+	showMessageInJsonBody)))
 	.then(fetchAll);
-    }
 }
 
 // print contracts
 function print(offers) {
-    //BLOB
     return postHelper(
-        '/offers/print',
-        { contracts: offers, update: true },
-        fetchAll,
-        showMessageInJsonBody
-    );
+	'/offers/print',
+	{ contracts: offers, update: true },
+	resp => resp.blob(),
+        showMessageInJsonBody)
+	.then(blob => {
+	    let fileURL = URL.createObjectURL(blob);
+	    let pdfWindow = window.open(fileURL);
+	    pdfWindow.onclose = () => URL.revokeObjectURL(fileURL);
+	    pdf.document.onload = pdf.print();
+
+	    return fetchAll();
+	});
 }
 
 /*

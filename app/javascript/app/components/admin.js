@@ -237,7 +237,9 @@ class Admin extends React.Component {
                         </MenuItem>
                     </DropdownButton>
 
-                    <Button bsStyle="primary" onClick={() => this.print()}>
+                    <Button
+	                bsStyle="primary"
+	                onClick={() => this.props.appState.print(this.getSelectedOffers())}>
                         Print contracts
                     </Button>
 
