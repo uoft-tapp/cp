@@ -409,6 +409,10 @@ class AppState {
     setOffersList(list) {
         this.set('offers.list', list);
     }
+
+    showContract(offer) {
+	fetch.showContract(offer);
+    }
 }
 
 let appState = new AppState();

@@ -24,14 +24,8 @@ function fetchHelper(URL, init, success, failure = defaultFailure) {
     return fetch(URL, init)
         .then(function(response) {
             if (response.ok) {
-                // parse the body of the response as JSON
-                if (['GET', 'POST'].includes(init.method)) {
-                    return response.json().then(resp => success(resp));
-                }
-
                 return success(response);
             }
-
             return failure(response);
         })
         .catch(function(error) {
@@ -82,7 +76,7 @@ function putHelper(URL, body, success, failure) {
 
 /* Resource GETters */
 
-const getOffers = () => getHelper('/offers', onFetchOffersSuccess);
+const getOffers = () => getHelper('/offers', resp => resp.json()).then(onFetchOffersSuccess);
 
 /* Success callbacks for resource GETters */
 
@@ -165,8 +159,8 @@ function importOffers(data) {
 // send contracts
 function sendContracts(offers) {
     return postHelper(
-        '/offers/send-contracts',
-        { offers: offers },
+	'/offers/send-contracts',
+	{ offers: offers },
         fetchAll,
         showMessageInJsonBody
     );
@@ -209,6 +203,18 @@ function setDdahAccepted(offers) {
     );
 }
 
+// show the contract for this offer in a new window
+function showContract(offer){
+    return postHelper('/offers/print',
+		      { contracts: [offer], update: false },
+		      resp => resp.blob())
+	.then(blob => {
+	    let fileURL = URL.createObjectURL(blob);
+	    let contractWindow = window.open(fileURL);
+	    contractWindow.onclose = () => URL.revokeObjectURL(fileURL);
+	});
+}
+
 // withdraw offers
 /*function withdraw(id, status){
     if(status=="Pending"){
@@ -231,10 +237,6 @@ function print(offers) {
 }
 
 /*
-      function showContract(id){
-        postHelper("/offers/print", {contracts: [id], update: false}, "", true)
-        }
-
       function updateSession(input, id){
         let data = {pay: input.value};
         let init = {

@@ -118,11 +118,18 @@ class Admin extends React.Component {
                 header: 'Contract Send Date',
                 data: p =>
                     p.offer.getIn(['contract_statuses', 'sent_at'])
-                        ? new Date(p.offer.getIn(['contract_statuses', 'sent_at'])).toLocaleString()
+                        ? <span>
+		              new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
+                                  .toLocaleString()&ensp;
+                              <i
+		                  className="fa fa-search-plus"
+                                  style={{ fontSize: '14px', cursor: 'pointer' }}
+                                  onClick={() => this.props.appState.showContract(p.offerId)}
+		              />
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'sent_at']),
 
-                style: { width: 0.07 },
+                style: { width: 0.08 },
             },
             {
                 header: 'Nag Count',
@@ -165,7 +172,7 @@ class Admin extends React.Component {
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'printed_at']),
 
-                style: { width: 0.07 },
+                style: { width: 0.06 },
             },
             {
                 header: 'DDAH Status',
