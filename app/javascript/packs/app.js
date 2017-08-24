@@ -19,7 +19,7 @@ import { fetchAll } from '../app/fetch.js';
 import { routeConfig } from '../app/routeConfig.js';
 
 import { Navbar } from '../app/components/navbar.js';
-import { Admin } from '../app/components/admin.js';
+import { ControlPanel } from '../app/components/controlPanel.js';
 
 /*** Main app component ***/
 
@@ -55,7 +55,7 @@ const RouterInst = props =>
             <Switch>
                 <Route
                     path={routeConfig.admin.route}
-                    render={() => <Admin navKey={routeConfig.admin.id} {...props} />}
+                    render={() => <ControlPanel navKey={routeConfig.admin.id} {...props} />}
                 />
                 <Route path={routeConfig.cp.route} render={() => null} />
                 <Route path={routeConfig.ddah.route} render={() => null} />

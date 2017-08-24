@@ -5,7 +5,7 @@ import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
 import { ImportMenu } from './importMenu.js';
 
-class Admin extends React.Component {
+class ControlPanel extends React.Component {
     getCheckboxElements() {
         return document.getElementsByClassName('offer-checkbox');
     }
@@ -25,6 +25,8 @@ class Admin extends React.Component {
         let fetchCheck = this.props.appState.fetchingOffers();
         let cursorStyle = { cursor: fetchCheck ? 'progress' : 'auto' };
 
+	const role = this.props.appState.getCurrentUserRole();
+
         this.config = [
             {
                 header: (
@@ -32,6 +34,7 @@ class Admin extends React.Component {
                         type="checkbox"
                         defaultChecked={false}
                         id="header-checkbox"
+                        disabled={role != 'admin'}
                         onClick={event =>
                             Array.prototype.forEach.call(this.getCheckboxElements(), box => {
                                 box.checked = event.target.checked;
@@ -202,7 +205,7 @@ class Admin extends React.Component {
         return (
             <Grid fluid id="offers-grid">
                 <ButtonToolbar id="dropdown-menu">
-                    <ImportMenu {...this.props} />
+                    {role == 'admin' && <ImportMenu {...this.props} />
 
                     <DropdownButton bsStyle="primary" title="Update offers" id="offers-dropdown">
                         <MenuItem
@@ -235,7 +238,7 @@ class Admin extends React.Component {
                         <MenuItem onClick={() => this.props.appState.nag(this.getSelectedOffers())}>
                             Nag
                         </MenuItem>
-                    </DropdownButton>
+                    </DropdownButton>}
 
                     <Button
 	                bsStyle="primary"
@@ -269,4 +272,4 @@ class Admin extends React.Component {
     }
 }
 
-export { Admin };
+export { ControlPanel };

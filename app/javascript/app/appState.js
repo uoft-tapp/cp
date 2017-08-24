@@ -4,7 +4,7 @@ import { fromJS } from 'immutable';
 import * as fetch from './fetch.js';
 
 const initialState = {
-    role: 'admin', // one of { 'admin', 'hradmin', 'inst', 'student' }
+    role: 'admin', // one of { 'admin', 'hris', 'inst', 'student' }
     user: 'user',
 
     // list of unread notifications (string can contain HTML, but be careful because it is not sanitized!)
