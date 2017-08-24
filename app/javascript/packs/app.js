@@ -12,11 +12,8 @@ import '../app-styles';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-
 import { appState } from '../app/appState.js';
 import { fetchAll } from '../app/fetch.js';
-import { routeConfig } from '../app/routeConfig.js';
 
 import { Navbar } from '../app/components/navbar.js';
 import { ControlPanel } from '../app/components/controlPanel.js';
@@ -47,22 +44,18 @@ const Bye = props =>
         <h1>Bye!</h1>
     </div>;
 
-const RouterInst = props =>
-    <Router basename="cp">
+const RouterInst = props => {
+    let role = props.appState.getCurrentUserRole();
+    
+    return (
         <div>
             <Navbar {...props} />
 
-            <Switch>
-                <Route
-                    path={routeConfig.admin.route}
-                    render={() => <ControlPanel navKey={routeConfig.admin.id} {...props} />}
-                />
-                <Route path={routeConfig.cp.route} render={() => null} />
-                <Route path={routeConfig.ddah.route} render={() => null} />
-
-                <Route path={routeConfig.logout.route} render={() => <Bye />} />
-            </Switch>
-
+            {role == 'admin' && <ControlPanel navKey={routeConfig.admin.id} {...props} />}
+            {role == 'hris' && null}
+            {role == 'inst' && null}
+            {role == 'student' && null}
+	
             <div className="container-fluid" id="alert-container">
                 {props.appState
                     .getAlerts()
@@ -77,7 +70,7 @@ const RouterInst = props =>
                     )}
             </div>
         </div>
-    </Router>;
+    );
 
 document.addEventListener('DOMContentLoaded', () => {
     ReactDOM.render(<App />, document.getElementById('root'));
