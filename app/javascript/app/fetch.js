@@ -237,7 +237,7 @@ function print(offers) {
 	    let fileURL = URL.createObjectURL(blob);
 	    let pdfWindow = window.open(fileURL);
 	    pdfWindow.onclose = () => URL.revokeObjectURL(fileURL);
-	    pdf.document.onload = pdf.print();
+	    pdfWindow.document.onload = pdfWindow.print();
 
 	    return fetchAll();
 	});

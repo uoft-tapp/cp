@@ -115,15 +115,15 @@ class ControlPanel extends React.Component {
                     'Withdrawn',
                 ].map(status => p => p.getIn(['contract_statuses', 'status']) == status),
 
-                style: { width: 0.06 },
+                style: { width: 0.05 },
             },
             {
                 header: 'Contract Send Date',
                 data: p =>
                     p.offer.getIn(['contract_statuses', 'sent_at'])
                         ? <span>
-                              new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
-                              .toLocaleString()&ensp;
+                              {new Date(p.offer.getIn(['contract_statuses', 'sent_at']))
+                               .toLocaleString()}&ensp;
                               <i
                                   className="fa fa-search-plus"
                                   style={{ fontSize: '14px', cursor: 'pointer' }}
@@ -133,7 +133,7 @@ class ControlPanel extends React.Component {
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'sent_at']),
 
-                style: { width: 0.08 },
+                style: { width: 0.07 },
             },
             {
                 header: 'Nag Count',
@@ -164,7 +164,7 @@ class ControlPanel extends React.Component {
                     )
                 ),
 
-                style: { width: 0.06 },
+                style: { width: 0.05 },
             },
             {
                 header: 'Printed Date',
@@ -176,7 +176,7 @@ class ControlPanel extends React.Component {
                         : '',
                 sortData: p => p.getIn(['contract_statuses', 'printed_at']),
 
-                style: { width: 0.06 },
+                style: { width: 0.07 },
             },
             {
                 header: 'DDAH Status',
