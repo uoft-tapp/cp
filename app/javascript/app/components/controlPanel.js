@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    Grid,
-    ButtonToolbar,
-    DropdownButton,
-    MenuItem,
-    Button,
-    FormControl,
-} from 'react-bootstrap';
+import { Grid, ButtonToolbar, DropdownButton, MenuItem, Button } from 'react-bootstrap';
 
 import { TableMenu } from './tableMenu.js';
 import { Table } from './table.js';
@@ -17,7 +10,7 @@ const getCheckboxElements = () => document.getElementsByClassName('offer-checkbo
 const getSelectedOffers = () =>
     Array.prototype.filter
         .call(getCheckboxElements(), box => box.checked == true)
-      .map(box => box.id);
+        .map(box => box.id);
 
 class ControlPanel extends React.Component {
     render() {
@@ -214,11 +207,7 @@ class ControlPanel extends React.Component {
                     {role == 'admin' && <OffersMenu {...this.props} />}
                     {role == 'admin' && <CommMenu {...this.props} />}
 
-                    <Button
-                        bsStyle="primary"
-                        onClick={() => this.props.appState.print(getSelectedOffers())}>
-                        Print contracts
-                    </Button>
+                    <PrintButton {...this.props} />
 
                     <TableMenu
                         config={this.config}
@@ -267,5 +256,10 @@ const CommMenu = props =>
         <MenuItem onClick={() => props.appState.email(getSelectedOffers())}>Email</MenuItem>
         <MenuItem onClick={() => props.appState.nag(getSelectedOffers())}>Nag</MenuItem>
     </DropdownButton>;
+
+const PrintButton = props =>
+    <Button bsStyle="primary" onClick={() => props.appState.print(getSelectedOffers())}>
+        Print contracts
+    </Button>;
 
 export { ControlPanel };
