@@ -4,7 +4,7 @@ import { fromJS } from 'immutable';
 import * as fetch from './fetch.js';
 
 const initialState = {
-    role: 'admin', // one of { 'admin', 'hris', 'inst', 'student' }
+    role: 'admin', // one of { 'admin', 'hris', 'inst' }
     user: 'user',
 
     // list of unread notifications (string can contain HTML, but be careful because it is not sanitized!)
@@ -411,7 +411,12 @@ class AppState {
     }
 
     showContract(offer) {
-	fetch.showContract(offer);
+        if (this.getCurrentUserRole() == 'admin') {
+            // admin see the contract as the applicant would see it
+	    fetch.showContractApplicant(offer);
+        } else {
+            fetch.showContractHr(offer);
+        }
     }
 
     withdrawOffers(offers) {

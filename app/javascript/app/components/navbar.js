@@ -46,10 +46,6 @@ const Auth = props =>
             Switch to inst role
         </MenuItem>
 
-        <MenuItem eventKey="switch-student" onClick={() => props.appState.setCurrentUserRole('student')}>
-            Switch to student role
-        </MenuItem>
-
         <MenuItem eventKey="logout">
             Logout
         </MenuItem>
