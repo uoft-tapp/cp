@@ -5,7 +5,7 @@
   </head>
   <body>
     <p>Dear <%= ENV["HR_ADMIN_NAME"] %>,</p>
-    <p>There was a total of <%= @num_accepted %> offers that were accepted in the last 24 hours.</p>
+    <p>There was a total of <%= @num_accepted %> offers that were accepted in the last <%= @time_elapsed %>.</p>
     <p>Have a great day!</p>
   </body>
 </html>
