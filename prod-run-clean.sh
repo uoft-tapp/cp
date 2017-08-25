@@ -33,10 +33,10 @@ docker-compose rm -f  || die docker-compose rm -f failed
 read -p 'enter to `docker-compose build --force-rm`  ' JUNK
 
 (set -x
-docker-compose build --force-rm || die docker-compose up --force-recreate failed
+docker-compose build --force-rm || die docker-compose build --force-rm failed
 )
 
-read -p 'enter to `docker-compose up cp containers: (will want -d in production) ' JUNK
+read -p 'enter to `docker-compose up` cp containers: ' JUNK
 
 (set -x
 docker-compose up -d --force-recreate || die docker-compose up --force-recreate failed
